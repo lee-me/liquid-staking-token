@@ -1,0 +1,50 @@
+{
+  "name": "LST Finder",
+  "short_name": "LST Finder",
+  "description": "Solana 流动性质押代币对比工具",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Solana%20staking%20token%20icon%2C%20modern%20design%2C%20blue%20and%20green%20colors%2C%20minimalist%2C%20clean%20lines&image_size=square",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Solana%20staking%20token%20icon%2C%20modern%20design%2C%20blue%20and%20green%20colors%2C%20minimalist%2C%20clean%20lines&image_size=square",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Solana%20staking%20token%20icon%2C%20modern%20design%2C%20blue%20and%20green%20colors%2C%20minimalist%2C%20clean%20lines&image_size=square",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": ["finance", "utilities"],
+  "screenshots": [
+    {
+      "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Solana%20LST%20Finder%20dashboard%2C%20modern%20web%20interface%2C%20showing%20staking%20protocols%20with%20APY%20rates%2C%20clean%20design&image_size=landscape_16_9",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "全部协议",
+      "url": "/?tab=all",
+      "icons": [{ "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=list%20icon%2C%20minimalist%2C%20blue&image_size=square", "sizes": "192x192" }]
+    },
+    {
+      "name": "我的收藏",
+      "url": "/?tab=favorites",
+      "icons": [{ "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=heart%20icon%2C%20minimalist%2C%20red&image_size=square", "sizes": "192x192" }]
+    }
+  ]
+}
