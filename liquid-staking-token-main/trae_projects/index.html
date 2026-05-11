@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LST Finder - Solana 流动性质押利息对比工具</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container header-content">
+                <div class="header-brand">
+                    <h1>🏦 LST Finder</h1>
+                    <p>Solana 新手的「存款利息对比工具」</p>
+                </div>
+                <nav class="main-nav">
+                    <a href="#" class="nav-link active" data-page="home">首页</a>
+                    <a href="#" class="nav-link" data-page="protocols">协议</a>
+                    <a href="#" class="nav-link" data-page="compare">对比<span id="compare-badge" class="compare-badge" style="display: none;">0</span></a>
+                    <a href="#" class="nav-link" data-page="defi">DeFi</a>
+                    <a href="#" class="nav-link" data-page="dashboard">仪表盘</a>
+                    <a href="#" class="nav-link" data-page="faq">FAQ</a>
+                    <a href="#" class="nav-link" data-page="about">关于</a>
+                </nav>
+                <div class="header-controls">
+                    <div class="language-selector">
+                        <button class="lang-btn" onclick="changeLanguage('zh')">中文</button>
+                        <button class="lang-btn" onclick="changeLanguage('en')">English</button>
+                    </div>
+                    <div class="wallet-section">
+                        <div id="wallet-info" class="wallet-info" style="display: none;"></div>
+                        <button id="wallet-connect-btn" class="btn btn-wallet" onclick="connectWallet()">连接钱包</button>
+                    </div>
+                    <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div id="page-home" class="page active">
+                <div class="container">
+                    <section class="hero-section">
+                        <h2>在 Solana 上赚取被动收入</h2>
+                        <p class="hero-subtitle">比较流动性质押协议，最大化您的收益</p>
+
+                        <div class="featured-lst">
+                            <div class="featured-lst-card" onclick="selectFeaturedLST('Jito')">
+                                <div class="featured-icon">🚀</div>
+                                <div class="featured-name">Jito (jitoSOL)</div>
+                                <div class="featured-apy">7.2%</div>
+                                <div class="featured-label">APY</div>
+                            </div>
+                            <div class="featured-lst-card" onclick="selectFeaturedLST('Marinade')">
+                                <div class="featured-icon">🌊</div>
+                                <div class="featured-name">Marinade (mSOL)</div>
+                                <div class="featured-apy">6.8%</div>
+                                <div class="featured-label">APY</div>
+                            </div>
+                            <div class="featured-lst-card" onclick="selectFeaturedLST('Lido')">
+                                <div class="featured-icon">🛡️</div>
+                                <div class="featured-name">Lido (stSOL)</div>
+                                <div class="featured-apy">5.9%</div>
+                                <div class="featured-label">APY</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="stake-calculator-section">
+                        <h3>💰 Liquid stake your SOL</h3>
+                        <div class="calculator-grid">
+                            <div class="calculator-input-area">
+                                <div class="input-group">
+                                    <label>You are staking</label>
+                                    <div class="sol-input-wrapper">
+                                        <input type="number" id="hero-sol-amount" value="10" min="1">
+                                        <span class="sol-label">SOL</span>
+                                    </div>
+                                </div>
+                                <div class="calculator-result">
+                                    <div class="result-row">
+                                        <span>Est. rewards per year</span>
+                                        <strong id="calc-rewards-year">0.62 SOL</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>You will receive</span>
+                                        <strong id="calc-receive">10.62 LST</strong>
+                                    </div>
+                                </div>
+                                <div class="stake-method-tabs">
+                                    <button class="stake-tab active" onclick="switchStakeMethod('direct')">Direct
+                                        deposit</button>
+                                    <button class="stake-tab" onclick="switchStakeMethod('pool')">Via stake
+                                        pool</button>
+                                </div>
+                                <div class="stake-info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Deposit Fee</span>
+                                        <span class="info-value">0%</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Price Impact</span>
+                                        <span class="info-value">0%</span>
+                                    </div>
+                                </div>
+                                <button class="stake-button" onclick="stakeNow()">Stake Now</button>
+                            </div>
+                            <div class="calculator-info-area">
+                                <h4>How it works</h4>
+                                <div class="info-step">
+                                    <span class="step-number">1</span>
+                                    <span class="step-text">Deposit SOL to receive LST</span>
+                                </div>
+                                <div class="info-step">
+                                    <span class="step-number">2</span>
+                                    <span class="step-text">Hold LST to earn staking rewards</span>
+                                </div>
+                                <div class="info-step">
+                                    <span class="step-number">3</span>
+                                    <span class="step-text">Trade or unstake anytime</span>
+                                </div>
+                                <div class="calculator-note">
+                                    💡 LST is a reward-bearing token. Your LST amount stays the same, but its value
+                                    increases over time.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="explanation-section">
+                        <div class="explanation-card">
+                            <h3>🤔 什么是 LST？</h3>
+                            <p>LST = Liquid Staking Token（流动性质押代币）。简单来说，就是你把 SOL 质押给验证者，获得一个可以在市场上自由交易的代币（比如
+                                mSOL、jitoSOL），同时还能赚取质押收益。</p>
+                        </div>
+                        <div class="explanation-card">
+                            <h3>📊 什么是 APY？</h3>
+                            <p>APY = Annual Percentage Yield（年化收益率）。就是你把钱存一年能赚多少利息。比如 6% APY 意味着存 100 SOL 一年后能拿 6 SOL
+                                利息。</p>
+                        </div>
+                        <div class="explanation-card">
+                            <h3>🔒 质押安全吗？</h3>
+                            <p>质押本身是安全的，但不同协议有不同风险。我们用颜色标记：绿色=安全，黄色=中等，红色=需谨慎。建议新手选择安全等级高的协议。</p>
+                        </div>
+                </div>
+                </section>
+
+                <section class="recommendation-section">
+                    <h3>🎯 智能推荐</h3>
+                    <p class="section-subtitle">根据您的风险偏好，获得专属的质押方案</p>
+
+                    <div class="risk-profile-selector">
+                        <button class="profile-btn" data-profile="conservative"
+                            onclick="selectRiskProfile('conservative')">
+                            <div class="profile-icon">🛡️</div>
+                            <div class="profile-name">保守型</div>
+                            <div class="profile-desc">优先安全，稳健收益</div>
+                        </button>
+                        <button class="profile-btn active" data-profile="balanced"
+                            onclick="selectRiskProfile('balanced')">
+                            <div class="profile-icon">⚖️</div>
+                            <div class="profile-name">平衡型</div>
+                            <div class="profile-desc">安全与收益平衡</div>
+                        </button>
+                        <button class="profile-btn" data-profile="aggressive" onclick="selectRiskProfile('aggressive')">
+                            <div class="profile-icon">🚀</div>
+                            <div class="profile-name">激进型</div>
+                            <div class="profile-desc">追求高收益</div>
+                        </button>
+                    </div>
+
+                    <div class="recommendation-result" id="recommendation-result">
+                        <div class="recommendation-summary">
+                            <h4>您的推荐组合（基于 100 SOL）</h4>
+                            <div id="portfolio-list" class="portfolio-list"></div>
+                            <div class="total-earnings">
+                                预计年收益: <strong id="total-yearly-earnings">0 SOL</strong>
+                            </div>
+                        </div>
+                        <div class="recommendation-details">
+                            <h4>推荐协议详情</h4>
+                            <div id="recommended-protocols" class="recommended-protocols"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+    </div>
+
+    <div id="page-protocols" class="page">
+        <div class="container">
+            <h2>📋 所有 LST 协议</h2>
+            <p class="section-subtitle">比较不同协议的收益、风险和安全性</p>
+
+            <div class="data-status">
+                <div id="loading-indicator" style="display: none;" class="loading-indicator">
+                    <span>加载中...</span>
+                </div>
+                <div id="last-update-time" class="last-update-time">
+                    最后更新: 刚刚
+                </div>
+            </div>
+            <button class="btn btn-refresh" onclick="fetchRealTimeData()">
+                刷新数据
+            </button>
+
+            <!-- 安全评估标准说明 -->
+            <div class="safety-criteria">
+                <h3>🛡️ 安全评估标准（五大维度）</h3>
+                <div class="criteria-grid">
+                    <div class="criteria-item">
+                        <div class="criteria-icon">🔍</div>
+                        <div class="criteria-content">
+                            <h4>安全审计</h4>
+                            <p>是否经过知名区块链安全公司审计</p>
+                        </div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-icon">💰</div>
+                        <div class="criteria-content">
+                            <h4>TVL资金规模</h4>
+                            <p>总锁仓金额越大，市场认可度越高</p>
+                        </div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-icon">⏰</div>
+                        <div class="criteria-content">
+                            <h4>运营时长</h4>
+                            <p>上线时间越久，稳定性更强</p>
+                        </div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-icon">🏢</div>
+                        <div class="criteria-content">
+                            <h4>团队与机构背书</h4>
+                            <p>团队是否公开、有无知名机构参投</p>
+                        </div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-icon">🛡️</div>
+                        <div class="criteria-content">
+                            <h4>风险兜底机制</h4>
+                            <p>有无协议资金兜底、slashing安全保护</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="search">搜索协议</label>
+                    <input type="text" id="search" placeholder="输入协议名称...">
+                </div>
+                <div class="input-group">
+                    <label for="sort-by">排序方式</label>
+                    <select id="sort-by">
+                        <option value="apy-desc">年化收益从高到低</option>
+                        <option value="apy-asc">年化收益从低到高</option>
+                        <option value="tvl-desc">资金规模从大到小</option>
+                        <option value="tvl-asc">资金规模从小到大</option>
+                        <option value="risk-asc">最安全优先</option>
+                        <option value="rating-desc">用户评分从高到低</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>风险等级</label>
+                    <div class="filter-options">
+                        <label><input type="checkbox" class="risk-filter" value="safe" checked> 安全</label>
+                        <label><input type="checkbox" class="risk-filter" value="medium" checked> 中等</label>
+                        <label><input type="checkbox" class="risk-filter" value="caution" checked> 需谨慎</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lst-list" id="lst-list">
+        </div>
+    </div>
+
+    <div id="page-compare" class="page">
+        <div class="container">
+            <h2>⚖️ 协议对比</h2>
+            <p class="section-subtitle">比较多个 LST 协议的详细指标</p>
+
+            <div id="compare-section">
+                <h3>协议对比表</h3>
+                <div class="compare-controls">
+                    <button class="btn btn-compare" onclick="showCompareModal()">添加协议</button>
+                    <button class="btn btn-compare" onclick="clearCompare()">清空</button>
+                </div>
+                <div class="compare-container">
+                    <table class="compare-table" id="compare-table">
+                        <thead>
+                            <tr>
+                                <th>指标</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compare-body">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="compare-empty" id="compare-empty" style="display: none;">
+                    <p>请添加至少两个协议进行比较</p>
+                    <button class="btn btn-primary" onclick="showCompareModal()">添加协议</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-faq" class="page">
+        <div class="container">
+            <h2>❓ 常见问题</h2>
+            <p class="section-subtitle">关于 LST 和质押的常见问题解答</p>
+
+            <div class="faq-section">
+                <h3>🔍 基础知识</h3>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            什么是 LST？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            LST (Liquid Staking Token) 是一种流动性质押代币，允许用户在质押 SOL 以获得网络奖励的同时，保持资产的流动性。当您质押 SOL 到 LST
+                            协议时，您会收到相应的 LST 代币作为凭证，这些代币可以在 DeFi 生态系统中使用，同时您仍然可以获得质押奖励。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            APY 是什么意思？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            APY (Annual Percentage Yield) 是年化收益率，包括复利效应的年收益率。它反映了您通过质押可以获得的年度收益。例如，如果 APY 为
+                            6.5%，那么每质押 100 SOL，一年后您将获得约 6.5 SOL 的收益（包括复利）。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            质押 SOL 安全吗？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            质押 SOL 本身是相对安全的，因为它是参与 Solana 网络验证的过程。然而，选择不同的 LST
+                            协议会有不同的风险。我们的平台通过风险标签（安全/较安全/需谨慎）帮助您评估不同协议的安全性，建议选择经过审计且 TVL 较高的协议。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h3>💡 使用指南</h3>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如何开始质押？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            1. 在我们的平台上比较不同 LST 协议的 APY、风险和其他指标<br>
+                            2. 选择一个适合您的协议，点击「质押」按钮<br>
+                            3. 连接您的钱包（如 Phantom、Solflare 等）<br>
+                            4. 输入您想要质押的 SOL 数量<br>
+                            5. 确认交易并等待完成<br>
+                            6. 您将收到相应的 LST 代币作为质押凭证
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如何计算我的收益？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            您可以使用我们平台上的收益计算器来估算您的收益。输入您想要质押的 SOL 数量，选择一个协议，计算器会显示每日、每周、每月和每年的预估收益。收益计算基于当前的
+                            APY，实际收益可能会因网络状况和协议表现而有所变化。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如何解押我的 SOL？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            解押过程因协议而异，通常包括以下步骤：<br>
+                            1. 访问您质押的 LST 协议官网<br>
+                            2. 连接您的钱包<br>
+                            3. 选择解押选项<br>
+                            4. 输入您想要解押的 LST 数量<br>
+                            5. 确认交易<br>
+                            6. 等待解押期结束（通常为 2-3 天）<br>
+                            7. 您的 SOL 将回到您的钱包
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h3>⚙️ 技术问题</h3>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            LST 代币的流动性如何？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            LST 代币的流动性取决于多个因素，包括协议的 TVL（总锁仓价值）、交易对的深度以及市场活跃度。一般来说，TVL 较高的协议（如 Marinade、Lido）的
+                            LST
+                            代币流动性更好，更容易在去中心化交易所（如 Raydium）上进行交易。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            质押奖励是如何计算和发放的？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            质押奖励通常由 LST 协议根据 Solana 网络的实际出块奖励计算。不同协议的发放机制可能有所不同：<br>
+                            1. 一些协议会自动将奖励复投，增加您持有的 LST 代币数量<br>
+                            2. 另一些协议可能会以 SOL 形式发放奖励到您的钱包<br>
+                            具体发放方式请参考各协议的官方文档。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如果协议出现问题，我的资金安全吗？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            虽然 LST 协议通常采用多重安全措施，但任何 DeFi 项目都存在一定风险。为了保护您的资金：<br>
+                            1. 选择经过知名审计机构审计的协议<br>
+                            2. 查看协议的安全历史和社区反馈<br>
+                            3. 不要将所有资金集中在单个协议中<br>
+                            4. 定期关注协议的更新和安全公告
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h3>🎯 智能推荐</h3>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如何获得个性化推荐？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            我们会根据您的风险偏好和投资目标，为您推荐最适合的 LST 协议组合。您可以在首页的"智能推荐"部分回答几个简单问题，获取专属的质押方案。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            什么是保守型/平衡型/激进型投资策略？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <strong>保守型</strong>：优先考虑资金安全，选择风险最低、稳定性最高的协议，适合大额投资或对风险敏感的用户。<br>
+                            <strong>平衡型</strong>：在安全和收益之间取得平衡，选择风险适中、收益稳健的协议，适合大多数用户。<br>
+                            <strong>激进型</strong>：追求更高收益，愿意承担更大风险，选择高收益但可能波动较大的协议，适合有小额增量资金的用户。
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            为什么建议分散投资？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            分散投资可以降低风险，避免把所有资金放在一个协议中。我们建议将资金分配到2-3个不同的 LST
+                            协议中，这样可以获得相对稳定的收益，同时降低单一协议出现问题时的损失。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h3>📊 平台功能</h3>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如何使用协议对比功能？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            1. 在协议列表页面，点击每个协议卡片上的「添加对比」按钮<br>
+                            2. 选择至少两个协议后，点击导航栏中的「对比」页面<br>
+                            3. 在对比页面，您可以查看所选协议的详细指标对比<br>
+                            4. 点击「清空」按钮可以移除所有对比的协议
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            如何使用收藏功能？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            1. 在协议列表页面，点击每个协议卡片上的「添加收藏」按钮<br>
+                            2. 点击导航栏中的「协议」页面<br>
+                            3. 在筛选选项中选择「我的收藏」，即可查看您收藏的协议<br>
+                            4. 再次点击「移除收藏」按钮可以取消收藏
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            平台数据多久更新一次？
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            我们平台的数据每 5 分钟自动更新一次，确保您看到的 APY 和 TVL 数据是最新的。您也可以点击页面上的「刷新数据」按钮手动更新数据。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-about" class="page">
+        <div class="container">
+            <h2>📖 关于 LST Finder</h2>
+            <p class="section-subtitle">我们的使命和愿景</p>
+
+            <div class="about-section">
+                <div class="about-card">
+                    <h3>我们的使命</h3>
+                    <p>为 Solana 生态系统的新手用户提供简单、直观的流动性质押工具，帮助他们轻松比较不同 LST 协议的收益和风险，做出明智的投资决策。</p>
+                </div>
+                <div class="about-card">
+                    <h3>核心功能</h3>
+                    <ul>
+                        <li>实时 LST 协议对比</li>
+                        <li>收益计算器</li>
+                        <li>风险评级系统</li>
+                        <li>协议详情分析</li>
+                        <li>多语言支持</li>
+                    </ul>
+                </div>
+                <div class="about-card">
+                    <h3>数据来源</h3>
+                    <p>我们的数据来源于各协议的官方 API、Solana 网络数据以及第三方数据源，确保信息的准确性和及时性。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-defi" class="page">
+        <div class="container">
+            <h2>💎 DeFi 中心</h2>
+            <p class="section-subtitle">一站式 Solana DeFi 操作平台</p>
+
+            <div class="defi-section">
+                <div class="defi-features">
+                    <div class="defi-feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>快速交易</h3>
+                        <p>在 Raydium、Orca 等主流 DEX 上快速交易代币</p>
+                        <button class="btn btn-primary" onclick="showDeFiModal('swap')">开始交易</button>
+                    </div>
+                    <div class="defi-feature-card">
+                        <div class="feature-icon">🌊</div>
+                        <h3>流动性挖矿</h3>
+                        <p>参与流动性池，赚取额外收益</p>
+                        <button class="btn btn-primary" onclick="showDeFiModal('liquidity')">参与挖矿</button>
+                    </div>
+                    <div class="defi-feature-card">
+                        <div class="feature-icon">🏦</div>
+                        <h3>借贷理财</h3>
+                        <p>在 Solana 上的借贷平台获取收益</p>
+                        <button class="btn btn-primary" onclick="showDeFiModal('lending')">查看借贷</button>
+                    </div>
+                    <div class="defi-feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>NFT 市场</h3>
+                        <p>浏览和交易 Solana NFT</p>
+                        <button class="btn btn-primary" onclick="showDeFiModal('nft')">浏览 NFT</button>
+                    </div>
+                </div>
+
+                <div class="defi-protocols">
+                    <h3>主流 DeFi 协议</h3>
+                    <div class="protocols-grid">
+                        <div class="protocol-card">
+                            <div class="protocol-logo">⚡</div>
+                            <div class="protocol-info">
+                                <h4>Raydium</h4>
+                                <p>AMM 交易和流动性挖矿</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="connectToProtocol('raydium')">连接</button>
+                        </div>
+                        <div class="protocol-card">
+                            <div class="protocol-logo">🐳</div>
+                            <div class="protocol-info">
+                                <h4>Orca</h4>
+                                <p>稳定币交易和流动性池</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="connectToProtocol('orca')">连接</button>
+                        </div>
+                        <div class="protocol-card">
+                            <div class="protocol-logo">🏛️</div>
+                            <div class="protocol-info">
+                                <h4>Solend</h4>
+                                <p>去中心化借贷平台</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="connectToProtocol('solend')">连接</button>
+                        </div>
+                        <div class="protocol-card">
+                            <div class="protocol-logo">🎨</div>
+                            <div class="protocol-info">
+                                <h4>Magic Eden</h4>
+                                <p>NFT 市场</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="connectToProtocol('magiceden')">连接</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="defi-portfolio">
+                    <h3>您的 DeFi 资产</h3>
+                    <div id="defi-portfolio-content" class="portfolio-content">
+                        <div class="portfolio-empty">
+                            <p>请连接钱包查看您的 DeFi 资产</p>
+                            <button class="btn btn-primary" onclick="connectWallet()">连接钱包</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-protocol-detail" class="page">
+        <div class="container">
+            <div class="protocol-detail-header">
+                <button class="btn btn-back" onclick="navigateBack()">← 返回</button>
+                <div class="protocol-detail-title">
+                    <span id="protocol-detail-icon">🔗</span>
+                    <h2 id="protocol-detail-title">协议名称</h2>
+                </div>
+            </div>
+
+            <div class="protocol-detail-content">
+                <div class="protocol-detail-info">
+                    <p id="protocol-detail-description">协议描述</p>
+                    <div class="protocol-detail-tags">
+                        <span id="protocol-detail-risk" class="risk-badge">风险等级</span>
+                    </div>
+                </div>
+
+                <div class="protocol-stats-grid">
+                    <div class="protocol-stat-card">
+                        <div class="stat-label">年化收益 (APY)</div>
+                        <div class="stat-value" id="protocol-detail-apy">0%</div>
+                    </div>
+                    <div class="protocol-stat-card">
+                        <div class="stat-label">总锁仓量 (TVL)</div>
+                        <div class="stat-value" id="protocol-detail-tvl">$0</div>
+                    </div>
+                    <div class="protocol-stat-card">
+                        <div class="stat-label">用户评分</div>
+                        <div class="stat-value" id="protocol-detail-rating">0/5</div>
+                    </div>
+                </div>
+
+                <div class="protocol-tabs">
+                    <button class="protocol-tab active" onclick="switchProtocolTab('overview')">概览</button>
+                    <button class="protocol-tab" onclick="switchProtocolTab('details')">详细信息</button>
+                    <button class="protocol-tab" onclick="switchProtocolTab('risk')">风险分析</button>
+                    <button class="protocol-tab" onclick="switchProtocolTab('earnings')">收益计算</button>
+                </div>
+
+                <div class="protocol-tab-content">
+                    <div id="tab-overview" class="protocol-tab-pane active">
+                        <h3>协议概览</h3>
+                        <p id="protocol-overview-text">协议详细描述内容</p>
+                    </div>
+
+                    <div id="tab-details" class="protocol-tab-pane">
+                        <h3>详细信息</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">存款费用</span>
+                                <span class="detail-value" id="detail-deposit-fee">0%</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">解押费用</span>
+                                <span class="detail-value" id="detail-unstake-fee">0%</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">解押时间</span>
+                                <span class="detail-value" id="detail-unstake-time">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">发行时间</span>
+                                <span class="detail-value" id="detail-launch-time">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">审计状态</span>
+                                <span class="detail-value" id="detail-audit-status">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-risk" class="protocol-tab-pane">
+                        <h3>风险分析</h3>
+                        <div class="risk-analysis-grid">
+                            <div class="risk-item">
+                                <span class="risk-label">安全评级</span>
+                                <span class="risk-value" id="risk-safety-rating">高</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="risk-label">审计信息</span>
+                                <span class="risk-value" id="risk-audit-info">-</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="risk-label">流动性分析</span>
+                                <span class="risk-value" id="risk-liquidity">-</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="risk-label">协议风险</span>
+                                <span class="risk-value" id="risk-protocol">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-earnings" class="protocol-tab-pane">
+                        <h3>收益计算器</h3>
+                        <div class="earnings-calculator">
+                            <div class="input-group">
+                                <label>质押 SOL 数量</label>
+                                <input type="number" id="earnings-sol-amount" value="10" min="1">
+                            </div>
+                            <div class="earnings-results">
+                                <div class="earnings-item">
+                                    <span>每日收益</span>
+                                    <strong id="earnings-daily">0 SOL</strong>
+                                </div>
+                                <div class="earnings-item">
+                                    <span>每周收益</span>
+                                    <strong id="earnings-weekly">0 SOL</strong>
+                                </div>
+                                <div class="earnings-item">
+                                    <span>每月收益</span>
+                                    <strong id="earnings-monthly">0 SOL</strong>
+                                </div>
+                                <div class="earnings-item">
+                                    <span>每年收益</span>
+                                    <strong id="earnings-yearly">0 SOL</strong>
+                                </div>
+                                <div class="earnings-item">
+                                    <span>1年复利收益</span>
+                                    <strong id="earnings-compound">0 SOL</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="protocol-actions">
+                    <button id="protocol-favorite-btn" class="btn btn-secondary"
+                        onclick="toggleFavorite()">添加收藏</button>
+                    <button id="protocol-compare-btn" class="btn btn-secondary" onclick="toggleCompare()">添加对比</button>
+                    <button id="protocol-stake-btn" class="btn btn-primary" onclick="stakeNow()">去官网质押</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-dashboard" class="page">
+        <div class="container">
+            <h2>📊 风险仪表盘</h2>
+            <p class="section-subtitle">协议安全评分、历史趋势和风险分析</p>
+
+            <div class="dashboard-section">
+                <div class="dashboard-card">
+                    <h3>协议安全评分</h3>
+                    <div class="security-ratings">
+                        <div class="security-rating-item">
+                            <div class="rating-header">
+                                <span class="protocol-name">Jito</span>
+                                <span class="rating-score">9.5/10</span>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-fill" style="width: 95%; background: var(--success-color);">
+                                </div>
+                            </div>
+                            <div class="rating-details">
+                                <span>审计: 完整</span>
+                                <span>TVL: $1.2B</span>
+                                <span>历史: 无安全事件</span>
+                            </div>
+                        </div>
+                        <div class="security-rating-item">
+                            <div class="rating-header">
+                                <span class="protocol-name">Marinade</span>
+                                <span class="rating-score">9.3/10</span>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-fill" style="width: 93%; background: var(--success-color);">
+                                </div>
+                            </div>
+                            <div class="rating-details">
+                                <span>审计: 完整</span>
+                                <span>TVL: $800M</span>
+                                <span>历史: 无安全事件</span>
+                            </div>
+                        </div>
+                        <div class="security-rating-item">
+                            <div class="rating-header">
+                                <span class="protocol-name">Lido</span>
+                                <span class="rating-score">9.4/10</span>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-fill" style="width: 94%; background: var(--success-color);">
+                                </div>
+                            </div>
+                            <div class="rating-details">
+                                <span>审计: 完整</span>
+                                <span>TVL: $500M</span>
+                                <span>历史: 无安全事件</span>
+                            </div>
+                        </div>
+                        <div class="security-rating-item">
+                            <div class="rating-header">
+                                <span class="protocol-name">Infinity</span>
+                                <span class="rating-score">7.8/10</span>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-fill" style="width: 78%; background: var(--warning-color);">
+                                </div>
+                            </div>
+                            <div class="rating-details">
+                                <span>审计: 完整</span>
+                                <span>TVL: $100M</span>
+                                <span>历史: 无安全事件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>历史 TVL 趋势</h3>
+                    <div class="tvl-trend">
+                        <div class="trend-chart">
+                            <div class="chart-axis">
+                                <div class="y-axis">
+                                    <span>$1.5B</span>
+                                    <span>$1.2B</span>
+                                    <span>$900M</span>
+                                    <span>$600M</span>
+                                    <span>$300M</span>
+                                    <span>$0</span>
+                                </div>
+                                <div class="x-axis">
+                                    <span>1月</span>
+                                    <span>2月</span>
+                                    <span>3月</span>
+                                    <span>4月</span>
+                                    <span>5月</span>
+                                    <span>6月</span>
+                                </div>
+                            </div>
+                            <div class="chart-data">
+                                <div class="chart-line jito">
+                                    <div class="line-point" style="left: 10%; top: 40%;"></div>
+                                    <div class="line-point" style="left: 25%; top: 35%;"></div>
+                                    <div class="line-point" style="left: 40%; top: 30%;"></div>
+                                    <div class="line-point" style="left: 55%; top: 25%;"></div>
+                                    <div class="line-point" style="left: 70%; top: 20%;"></div>
+                                    <div class="line-point" style="left: 85%; top: 15%;"></div>
+                                </div>
+                                <div class="chart-line marinade">
+                                    <div class="line-point" style="left: 10%; top: 60%;"></div>
+                                    <div class="line-point" style="left: 25%; top: 55%;"></div>
+                                    <div class="line-point" style="left: 40%; top: 50%;"></div>
+                                    <div class="line-point" style="left: 55%; top: 45%;"></div>
+                                    <div class="line-point" style="left: 70%; top: 40%;"></div>
+                                    <div class="line-point" style="left: 85%; top: 35%;"></div>
+                                </div>
+                                <div class="chart-line lido">
+                                    <div class="line-point" style="left: 10%; top: 75%;"></div>
+                                    <div class="line-point" style="left: 25%; top: 70%;"></div>
+                                    <div class="line-point" style="left: 40%; top: 65%;"></div>
+                                    <div class="line-point" style="left: 55%; top: 60%;"></div>
+                                    <div class="line-point" style="left: 70%; top: 55%;"></div>
+                                    <div class="line-point" style="left: 85%; top: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color jito"></span>
+                                    <span>Jito</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color marinade"></span>
+                                    <span>Marinade</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color lido"></span>
+                                    <span>Lido</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>协议黑历史检查</h3>
+                    <div class="black-history-check">
+                        <div class="history-item safe">
+                            <div class="history-icon">✅</div>
+                            <div class="history-content">
+                                <h4>Jito</h4>
+                                <p>无安全事件记录，代码质量高，社区活跃。</p>
+                            </div>
+                        </div>
+                        <div class="history-item safe">
+                            <div class="history-icon">✅</div>
+                            <div class="history-content">
+                                <h4>Marinade</h4>
+                                <p>无安全事件记录，是Solana上最早的LST协议之一，稳定性高。</p>
+                            </div>
+                        </div>
+                        <div class="history-item safe">
+                            <div class="history-icon">✅</div>
+                            <div class="history-content">
+                                <h4>Lido</h4>
+                                <p>无安全事件记录，跨链质押协议，在多个链上都有部署。</p>
+                            </div>
+                        </div>
+                        <div class="history-item caution">
+                            <div class="history-icon">⚠️</div>
+                            <div class="history-content">
+                                <h4>Infinity</h4>
+                                <p>新兴协议，历史较短，TVL相对较小，建议谨慎投资。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>用户持仓分析</h3>
+                    <div class="user-holdings">
+                        <div id="holdings-empty" style="display: block;">
+                            <p>请连接钱包查看您的LST持仓</p>
+                            <button class="btn btn-primary" onclick="connectWallet()">连接钱包</button>
+                        </div>
+                        <div id="holdings-content" style="display: none;">
+                            <div class="holdings-summary">
+                                <div class="summary-item">
+                                    <span>总持仓价值</span>
+                                    <strong id="total-holdings-value">$0</strong>
+                                </div>
+                                <div class="summary-item">
+                                    <span>每日收益</span>
+                                    <strong id="daily-earnings">0 SOL</strong>
+                                </div>
+                                <div class="summary-item">
+                                    <span>年化收益</span>
+                                    <strong id="annual-earnings">0%</strong>
+                                </div>
+                            </div>
+                            <div class="holdings-list" id="holdings-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 LST Finder - Solana 流动性质押利息对比工具</p>
+            <p>免责声明：本网站提供的信息仅供参考，不构成投资建议。请自行研究并做出投资决策。</p>
+        </div>
+    </footer>
+
+    <nav class="mobile-nav">
+        <button class="mobile-nav-item active" data-page="home">
+            <span class="mobile-nav-icon">🏠</span>
+            <span class="mobile-nav-label">首页</span>
+        </button>
+        <button class="mobile-nav-item" data-page="protocols">
+            <span class="mobile-nav-icon">📋</span>
+            <span class="mobile-nav-label">协议</span>
+        </button>
+        <button class="mobile-nav-item" data-page="compare">
+            <span class="mobile-nav-icon">⚖️</span>
+            <span class="mobile-nav-label">对比</span>
+            <span id="mobile-compare-badge" class="mobile-compare-badge" style="display: none;">0</span>
+        </button>
+        <button class="mobile-nav-item" data-page="defi">
+            <span class="mobile-nav-icon">💎</span>
+            <span class="mobile-nav-label">DeFi</span>
+        </button>
+        <button class="mobile-nav-item" data-page="dashboard">
+            <span class="mobile-nav-icon">📊</span>
+            <span class="mobile-nav-label">仪表盘</span>
+        </button>
+    </nav>
+    </div>
+
+    <div id="compare-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择协议添加到对比</h3>
+                <button class="modal-close" onclick="closeCompareModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="compare-protocols-list" class="protocol-select-list">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCompareModal()">取消</button>
+                <button class="btn btn-primary" onclick="updateComparison()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="onboarding-modal" class="modal">
+        <div class="modal-content onboarding-content">
+            <div class="onboarding-header">
+                <div class="onboarding-progress">
+                    <span id="onboarding-step">1/4</span>
+                </div>
+                <button class="modal-close" onclick="closeOnboarding()">&times;</button>
+            </div>
+            <div class="onboarding-body">
+                <div id="onboarding-step-1" class="onboarding-step active">
+                    <div class="onboarding-icon">🏦</div>
+                    <h3>欢迎使用 LST Finder</h3>
+                    <p>我们是 Solana 新手的「存款利息对比工具」，帮助您轻松比较不同流动性质押协议的收益。</p>
+                    <div class="onboarding-highlight">
+                        <span class="highlight-icon">💡</span>
+                        <span>流动性质押让您在赚取利息的同时保持资产流动性</span>
+                    </div>
+                </div>
+                <div id="onboarding-step-2" class="onboarding-step">
+                    <div class="onboarding-icon">📊</div>
+                    <h3>了解 APY 和风险</h3>
+                    <p>APY 是年化收益率，风险评级帮助您评估协议安全性。</p>
+                    <div class="onboarding-highlight">
+                        <span class="highlight-icon">🎯</span>
+                        <span>绿色=安全，黄色=中等，红色=需谨慎</span>
+                    </div>
+                </div>
+                <div id="onboarding-step-3" class="onboarding-step">
+                    <div class="onboarding-icon">⚖️</div>
+                    <h3>智能推荐系统</h3>
+                    <p>根据您的风险偏好，获取专属的质押方案组合建议。</p>
+                    <div class="onboarding-highlight">
+                        <span class="highlight-icon">🚀</span>
+                        <span>保守型、平衡型、激进型，总有一款适合您</span>
+                    </div>
+                </div>
+                <div id="onboarding-step-4" class="onboarding-step">
+                    <div class="onboarding-icon">🎉</div>
+                    <h3>开始您的质押之旅</h3>
+                    <p>连接钱包，选择协议，开始赚取被动收入！</p>
+                    <div class="onboarding-highlight">
+                        <span class="highlight-icon">✨</span>
+                        <span>现在就开始，让您的 SOL 为您工作</span>
+                    </div>
+                </div>
+            </div>
+            <div class="onboarding-footer">
+                <button id="onboarding-back" class="btn btn-secondary" onclick="prevOnboardingStep()" style="display: none;">上一步</button>
+                <button id="onboarding-next" class="btn btn-primary" onclick="nextOnboardingStep()">下一步</button>
+                <button id="onboarding-start" class="btn btn-primary" onclick="startUsing()" style="display: none;">开始使用</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
